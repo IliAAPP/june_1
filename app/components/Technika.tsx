@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 const categories = [
-  { id: 1, title: 'Категория 1' },
-  { id: 2, title: 'Категория 2' },
-  { id: 3, title: 'Категория 3' },
-  { id: 4, title: 'Категория 4' },
+  { id: 1, title: 'Тракторы' },
+  { id: 2, title: 'Автогрейдеры' },
+  { id: 3, title: 'Экскаваторы' },
+  { id: 4, title: 'Автокраны' },
 ];
 
 const CategoryScreen = () => {
@@ -24,8 +24,8 @@ const CategoryScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={{paddingHorizontal: 7}} onPress={() => {}}>
-          <Ionicons name="menu" size={24} color="black" />
+        <TouchableOpacity style={{paddingHorizontal: 7}} onPress={() => {navigation.navigate('Main')}}>
+          <Ionicons name="arrow-back" size={24} color="black" />
         </TouchableOpacity>
         <View style={styles.headerIcons}>
           <TouchableOpacity style={{paddingHorizontal: 7}} onPress={() => {}}>
@@ -44,17 +44,18 @@ const CategoryScreen = () => {
       </View>
       <View style={styles.tabs}>
         <TouchableOpacity 
-          style={[styles.tabButton, activeTab === 'Technika' && styles.activeTabButton]} 
+          style={styles.tabButton} 
           onPress={() => handleTabPress('Technika')}
         >
-          <Text style={[styles.tabText, activeTab === 'Technika' && styles.activeTabText]}>Техника</Text>
+          <Text style={styles.tabText}>Техника</Text>
         </TouchableOpacity>
         <TouchableOpacity 
-          style={[styles.tabButton, activeTab === 'Materials' && styles.activeTabButton]} 
+          style={styles.tabButton} 
           onPress={() => handleTabPress('Materials')}
         >
-          <Text style={[styles.tabText, activeTab === 'Materials' && styles.activeTabText]}>Материалы</Text>
+          <Text style={styles.tabText}>Материалы</Text>
         </TouchableOpacity>
+
       </View>
       <View style={styles.categories}>
         {categories.map(category => (
@@ -63,7 +64,7 @@ const CategoryScreen = () => {
             style={styles.categoryItem}
             onPress={() => navigation.navigate('CategoryDetails', { categoryId: category.id })}
           >
-            <Ionicons name="folder" size={50} color="#007bff" />
+            <MaterialCommunityIcons name="tractor" size={50} color="#007bff" />
             <Text style={styles.categoryText}>{category.title}</Text>
             <Ionicons name="arrow-forward" size={24} color="#007bff" />
           </TouchableOpacity>
@@ -86,6 +87,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 20,
+    marginTop: 20,
   },
   headerIcons: {
     flexDirection: 'row',

@@ -1,31 +1,31 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native'; // Импортируйте хук useNavigation
+import { useNavigation } from '@react-navigation/native';
 
 const DailyCheck = () => {
-  const navigation = useNavigation(); // Используйте хук useNavigation
-  const [videoPath, setVideoPath] = useState('');
+  const navigation = useNavigation();
+  const [question, setQuestion] = useState('');
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
 
-  const handleAnalyze = async () => {
-    if (videoPath) {
+  const handleGenerateText = async () => {
+    if (question) {
       try {
-        const response = await fetch("http://172.20.10.2:8080/detect_objects", {
+        const response = await fetch("http://10.2.0.95:8000/generate_text", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ video_path: videoPath }),
+          body: JSON.stringify({ question }),
         });
-        
+
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
 
         const data = await response.json();
-        setResult(data);  // Установите данные в состояние
-        setError(null);  // Очистите ошибки
+        setResult(data);
+        setError(null);
       } catch (error) {
         console.error('Ошибка при отправке запроса:', error);
         setError('Ошибка при отправке запроса');
@@ -40,22 +40,21 @@ const DailyCheck = () => {
       </TouchableOpacity>
       
       <View style={{ marginTop: 100, padding: 20 }}>
-        <Text style={{ marginVertical: 20 }}>Не забудь провести ежедневную проверку рабочих!</Text>
+        <Text style={{ marginVertical: 20 }}>Пожалуйста, задайте вопрос:</Text>
         <TextInput
-          value={videoPath}
-          onChangeText={setVideoPath}
-          placeholder="Введите путь к файлу"
-          style={{ marginVertical: 20 }}
+          value={question}
+          onChangeText={setQuestion}
+          placeholder="Введите ваш вопрос"
+          style={{ marginVertical: 20, borderWidth: 1, padding: 10, borderRadius: 5 }}
         />
         <Button
-          title="Анализировать"
-          onPress={handleAnalyze}
+          title="Сгенерировать ответ"
+          onPress={handleGenerateText}
         />
         {result && (
-          <View style={{ marginTop: 20, padding: 15, backgroundColor: '#F8F8F7'}}>
-            <Text style={{padding: 5}}>Результаты анализа:</Text>
-            <Text style={{padding: 5}}>Процент соблюдения техники безопасности: {(result.hardhat_ratio * 100).toFixed(2)}%</Text>
-            <Text style={{padding: 5}}>Комментарий: {result.comment}</Text>
+          <View style={{ marginTop: 20, padding: 15, backgroundColor: '#F8F8F7' }}>
+            <Text style={{ padding: 5 }}>Сгенерированный ответ:</Text>
+            <Text style={{ padding: 5 }}>{result.generated_text}</Text>
           </View>
         )}
         {error && (
